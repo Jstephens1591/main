@@ -44,12 +44,23 @@ function getMostCommonGenres(books) {
 
 
 function getMostPopularBooks(books) {
-  return books.map((book) => {
-    return {name: book.title, count: book.borrows.length}
-   }).sort((a, b) => (a.count < b.count ? 1 : -1)).slice(0, 5)
- }
-
-
+  const booksBorrowed = [];
+  for (let obj in books) {
+    book = books[obj];
+      for (let i = 0; i < book.borrows.length; i++) {
+      booksBorrowed.push(book.title);
+    }
+  }
+  
+  const popularMap = booksBorrowed.reduce((prev, cur) => { 
+    prev[cur] = (prev[cur] || 0) + 1; 
+    return prev; 
+  }, []);
+  
+  const popularArr = Object.entries(popularMap).map(([name, count]) => ({name, count}));
+  const topPopularBooks = popularArr.sort((ctPrev, ctCur) => ctCur.count - ctPrev.count).slice(0,5);
+    return topPopularBooks;
+}
 
 function getMostPopularAuthors(books, authors) {
   let result = [];
